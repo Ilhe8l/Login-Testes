@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Configura as áreas de texto com contagem de caracteres
     function setupTextareas() {
         const textareas = [
-            { id: 'volunteer-description', min: 100, max: 500 },
+            { id: 'volunteer-description', min: 0, max: 150 },
             { id: 'institution-mission', min: 200, max: 1000 },
             { id: 'institution-needs', min: 150, max: 800 },
             { id: 'institution-description', min: 300, max: 2000 }
@@ -299,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hashedInputPassword === user.password) {
                 const token = generateToken();
                 sessionStorage.setItem('authToken', token);
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
                 showMessage('login-email', 'Login bem-sucedido!', false);
                 if (staySignedIn) {
                     localStorage.setItem('loggedInUser', JSON.stringify(user));
