@@ -47,6 +47,8 @@ section {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: none;
     position: relative;
+    width: 80vw;
+    max-width: 450px;
 }
 
 .register-type-buttons button{
@@ -58,7 +60,7 @@ section {
     height: 40px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     cursor: pointer;
     transition: color 0.3s ease;
     background: none;
@@ -67,6 +69,7 @@ section {
     color: #333;
     padding: 0;
     margin: 0;
+    margin-right: 15px;
 }
 
 .back-button:hover{
@@ -77,12 +80,16 @@ section {
 .top-form{
     display: flex;
     margin-top: 0;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 .top-form h2{
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 300px;
+    width: 100%;
 }
 
 section.active {
@@ -103,6 +110,7 @@ section.active {
 
 .form-group {
     margin-bottom: 20px;
+    position: relative;
 }
 
 .form-row {
@@ -118,6 +126,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="url"],
+input[type="date"],
 textarea,
 select {
     width: 100%;
@@ -128,22 +137,43 @@ select {
     background-color: #fff;
     color: #333;
     transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    resize: none;
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="url"]:focus,
+input[type="date"]:focus,
 textarea:focus,
 select:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #1DB954;
+    border-color: #1DB954;
+    box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.textarea-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.char-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 14px;
+    color: #666;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    max-width: 300px;
 }
 
 .checkbox-group input[type="checkbox"] {
@@ -160,11 +190,19 @@ button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
     background-color: #1ED760;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .switch-form,
@@ -182,8 +220,6 @@ a {
 a:hover {
     color: #1ED760;
 }
-
-
 
 .custom-select {
     position: relative;
@@ -208,18 +244,18 @@ input[type="file"] {
     display: none;
 }
 
-input[type="file"] + label {
+.pic-label {
     display: inline-block;
-    padding: 10px 20px;
-    background-color: #1DB954;
-    color: #fff;
+    padding: 10px 0px;
+    color: #1DB954;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
 }
 
-input[type="file"] + label:hover {
-    background-color: #1ED760;
+.pic-label:hover{
+    color: #1ED760;
 }
 
 .image-preview {
@@ -227,11 +263,54 @@ input[type="file"] + label:hover {
     border-radius: 4px;
     object-fit: contain;
     display: flex;
+    width: 100%;
+}
+
+#institution-register-form-3 .form-row{
+    display: flex;
+    flex-direction: column;
 }
 
 .div-profile-image-input, .div-header-image-input{
     display: flex;
     flex-direction: column;
+}
+
+.div-images-input{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.div-images-input .form-group{
+    margin: 0;
+}
+
+.date-label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background-color: #fff;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: rgba(0, 0, 0, 0);
+    opacity: 1;
+    display: block;
+    background: url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/icons/calendar-date.svg) no-repeat;
+    width: 20px;
+    height: 20px;
+    border-width: thin;
+}
+
+.error-message {
+    color: #ff3860;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
 }
 
 @media (max-width: 600px) {
