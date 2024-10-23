@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const textarea = document.getElementById(textareaId);
         if (!textarea) return;
 
-        const charCountId = `charCount-${textareaId}`;
+        const charCountId = `charCount${textareaId.slice(-1)}`;
         let charCount = document.getElementById(charCountId);
 
         if (!charCount) {
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para gerar token de autenticação
     function generateToken() {
-        return crypto.getRandomValues(new Uint8Array(16)).join('');
+        return Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('');
     }
 
     // Função para limpar campos do formulário
@@ -255,36 +255,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formId = event.target.id;
         let isValid = true;
+        const submitButton = event.target.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
 
-        switch (formId) {
-            case 'login-form':
-                await handleLogin();
-                break;
-            case 'volunteer-register-form-1':
-                isValid = await handleVolunteerRegister1();
-                break;
-            case 'volunteer-register-form-2':
-                await handleVolunteerRegister2();
-                break;
-            case 'institution-register-form-1':
-                isValid = await handleInstitutionRegister1();
-                break;
-            case 'institution-register-form-2':
-                isValid = handleInstitutionRegister2();
-                break;
-            case 'institution-register-form-3':
-                await handleInstitutionRegister3();
-                break;
-            case 'forgot-password-form':
-                await handleForgotPassword();
-                break;
+        try {
+            switch (formId) {
+                case 'login-form':
+                    await handleLogin();
+                    break;
+                case 'volunteer-register-form-1':
+                    isValid = await handleVolunteerRegister1();
+                    break;
+                case 'volunteer-register-form-2':
+                    await handleVolunteerRegister2();
+                    break;
+                case 'institution-register-form-1':
+                    isValid = await handleInstitutionRegister1();
+                    break;
+                case 'institution-register-form-2':
+                    isValid = handleInstitutionRegister2();
+                    break;
+                case 'institution-register-form-3':
+                    await handleInstitutionRegister3();
+                    break;
+                case 'forgot-password-form':
+                    await handleForgotPassword();
+                    break;
+            }
+
+            if (isValid) {
+                if (formId.includes('register') && !formId.endsWith('2')) {
+                    // Se for um formulário de registro e não for o último passo, não limpe os campos
+                    submitButton.disabled = false;
+                } else {
+                    clearFormFields(formId);
+                }
+            } else {
+                submitButton.disabled = false;
+            }
+        } catch (error) {
+            console.error('Erro ao processar o formulário:', error);
+            showMessage(formId, 'Ocorreu um erro ao processar o formulário. Por favor, tente novamente.', true);
+            submitButton.disabled = false;
+        } finally {
+            isSubmitting = false;
         }
-
-        if (isValid) {
-            clearFormFields(formId);
-        }
-
-        isSubmitting = false;
     }
 
     // Função para lidar com o login
@@ -357,12 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const existingUser = users.find(user => 
             user.email === fields.find(f => f.id === 'volunteer-email').value || 
-            user.username === fields.find(f => f.id === 
-
- 'volunteer-username').value
+            user.username === fields.find(f => f.id === 'volunteer-username').value
         );
 
-        if (existingUser) {
+        if  (existingUser) {
             showMessage('volunteer-email', 'E-mail ou nome de usuário já cadastrado.', true);
             return false;
         }
@@ -397,8 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tempFormData.description = document.getElementById('volunteer-description').value;
 
-        if (!validateTextareaLength('volunteer-description', 100, 500)) {
-            showMessage('volunteer-description', 'A descrição deve ter entre 100 e 500 caracteres.', true);
+        if (!validateTextareaLength('volunteer-description', 0, 150)) {
+            showMessage('volunteer-description', 'A descrição deve ter no máximo 150 caracteres.', true);
             return;
         }
 
@@ -408,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('volunteer-description', 'Cadastro de voluntário concluído!', false);
         setTimeout(() => {
             showSection('login');
+            document.querySelector('#login-section button[type="submit"]').disabled = false;
         }, 1500);
     }
 
@@ -521,13 +535,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('institution-social-media', 'Cadastro de instituição concluído!', false);
         setTimeout(() => {
             showSection('login');
+            document.querySelector('#login-section button[type="submit"]').disabled = false;
         }, 1500);
     }
 
     // Função para lidar com a recuperação de senha
-    //ainda não funciona
-    function handleForgotPassword(event) {
-
+    function handleForgotPassword() {
         const email = document.getElementById('forgot-password-email').value;
         const user = users.find(u => u.email === email);
 
